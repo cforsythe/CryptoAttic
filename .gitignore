@@ -1,4 +1,4 @@
 index.sublime-workspace
-prod/.git
+prod/*.git
 prod/.gitignore
 Procfile
