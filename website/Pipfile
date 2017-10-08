@@ -4,8 +4,11 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+
 flask = "*"
 gunicorn = "*"
+requests = "*"
+apscheduler = "*"
 
 
 [dev-packages]

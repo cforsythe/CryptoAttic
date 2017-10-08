@@ -1,8 +1,30 @@
+<!DOCTYPE html>
 <html>
 	<head>
 		<title>Crypto Attic Home</title>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<link rel='stylesheet' href={{url_for('static', filename='css/styles.css')}}>
 	</head>
 	<body>
-		<span>Website under construction, this will be a cryptocurrency portfolio tracker</span>
+		<h1 id='title'>Cryptocurrency Portfolio Tracker</h1>
+		<br>
+		<div id='coinwrapper'>
+			<h2 id='coinname'>Bitcoin</h2>
+			<div id='pricewrapper'>
+				<span>$</span><span id='Bitcoinprice'></span>
+			</div>
+		</div>
+		<script>
+			$.ajax({
+				url: '/prices',
+				success:function(result){
+					console.log(result);
+					document.getElementById('Bitcoinprice').innerHTML = result['BTC'];
+				},
+				error:function(){
+					console.log("I failed");
+				}
+			})
+		</script>
 	</body>
 </html>

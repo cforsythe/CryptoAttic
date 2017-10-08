@@ -1,6 +1,26 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, jsonify
+import requests
+from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.triggers.interval import IntervalTrigger
+import atexit
 app = Flask(__name__)
 
+allprices = {}
+
+def getPrices():
+	global allprices
+	requestaddress = 'https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC&tsyms=USD'
+	try: 
+		response = requests.get(requestaddress)
+		allprices['BTC'] = response.json()['BTC']['USD']
+		print('gettingprices')
+	except:
+		print("I didn't recieve any information for this coin")
+
+scheduler = BackgroundScheduler()
+scheduler.start()
+scheduler.add_job(getPrices, 'interval', seconds=5)
+atexit.register(lambda: scheduler.shutdown())
 @app.route("/")
 def mainpage():
     return render_template('index.html') 
@@ -9,5 +29,15 @@ def mainpage():
 def fun():
 	return "Oh, so you want to have fun eh?"
 
+@app.route("/prices", methods=['GET', 'POST'])
+def prices(coinname='BTC'):
+	global allprices
+	if(request.method == 'POST'):
+		requestInfo = request.form
+		coins = requestInfo['coins']
+	else:
+		return jsonify(BTC=allprices[coinname])
+	
 if __name__ == "__main__":
-	app.run(debug=True, host='0.0.0.0')
+	app.run(debug=True, host='0.0.0.0', use_reloader=False)
+
