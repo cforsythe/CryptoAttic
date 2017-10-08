@@ -9,6 +9,7 @@ flask = "*"
 gunicorn = "*"
 requests = "*"
 apscheduler = "*"
+"flask-script" = "*"
 
 
 [dev-packages]

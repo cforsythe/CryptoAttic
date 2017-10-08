@@ -3,7 +3,9 @@ import requests
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.interval import IntervalTrigger
 import atexit
+from flask_script import Manager
 app = Flask(__name__)
+manager = Manager(app)
 
 allprices = {}
 
@@ -37,7 +39,13 @@ def prices(coinname='BTC'):
 		coins = requestInfo['coins']
 	else:
 		return jsonify(BTC=allprices[coinname])
-	
-if __name__ == "__main__":
+
+@manager.command
+def runserver():
+	getPrices()
 	app.run(debug=True, host='0.0.0.0', use_reloader=False)
+
+if __name__ == "__main__":
+	manager.run(runserver())
+	
 
