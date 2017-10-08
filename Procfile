@@ -1,2 +1,1 @@
-web: cd website
-web: gunicorn server:app --log-file -
+web: gunicorn -pythonpath server:app --log-file -
