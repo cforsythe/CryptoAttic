@@ -1,5 +1,5 @@
 # CryptoAttic
-The cryptocurrency [portfolio](www.cryptoattic.com) that values anonymity and simplicity
+The cryptocurrency [portfolio](http://www.cryptoattic.com) that values anonymity and simplicity
 
 
 **How to contribute**
