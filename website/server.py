@@ -72,7 +72,7 @@ def fun():
 def prices(coinname='BTC'):
 	global all_prices
 	coinstosend = {}
-	while(bool(all_prices) == False):
+	if(bool(all_prices) == False):
 		return "I have no prices yet"
 	if(request.method == 'POST'):
 		coinsneeded = json.loads(request.form['coins'])
