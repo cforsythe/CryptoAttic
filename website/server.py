@@ -55,11 +55,11 @@ def getCoins():
 			coins[coin_abrv] = coin_name
 	except:
 		print("I didn't retrieve anything")
-def scheduleProcess():
-	scheduler = BackgroundScheduler()
-	scheduler.start()
-	scheduler.add_job(coinCompile, 'interval', seconds=10)
-	atexit.register(lambda: scheduler.shutdown())
+
+scheduler = BackgroundScheduler()
+scheduler.start()
+scheduler.add_job(coinCompile, 'interval', seconds=10)
+atexit.register(lambda: scheduler.shutdown())
 @app.route("/")
 def mainpage():
     return render_template('index.html') 
@@ -85,7 +85,6 @@ def prices(coinname='BTC'):
 @manager.command
 def runserver():
 	getCoins()
-	scheduleProcess()
 	app.run(debug=True, host='0.0.0.0', use_reloader=False)
 
 if __name__ == "__main__":
