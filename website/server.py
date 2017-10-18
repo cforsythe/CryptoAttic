@@ -50,6 +50,7 @@ def getCoins():
 			coin_abrv = allcoins[coin]['Name']
 			coin_name = allcoins[coin]['CoinName']
 			coins[coin_abrv] = coin_name
+		print('Retrieved all coins')
 	except:
 		print("I didn't retrieve anything")
 
