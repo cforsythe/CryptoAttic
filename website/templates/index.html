@@ -11,15 +11,23 @@
 		<div id='coinwrapper'>
 			<h2 id='coinname'>Bitcoin</h2>
 			<div id='pricewrapper'>
-				<span>$</span><span id='Bitcoinprice'></span>
+				<span>$</span><span id='bitcoinprice'></span>
+			</div>
+			<h2 id='coinname'>Ripple</h2>
+			<div id='pricewrapper'>
+				<span>$</span><span id='xrpprice'></span>
 			</div>
 		</div>
 		<script>
+			var coins = ['BTC','ETH','XRP','NEO'];	
 			$.ajax({
 				url: '/prices',
+				type: 'POST',
+				data: {coins: JSON.stringify(coins)},
 				success:function(result){
 					console.log(result);
-					document.getElementById('Bitcoinprice').innerHTML = result['BTC'];
+					document.getElementById('bitcoinprice').innerHTML = result['coins']['BTC'];
+					document.getElementById('xrpprice').innerHTML = result['coins']['XRP'];
 				},
 				error:function(){
 					console.log("I failed");

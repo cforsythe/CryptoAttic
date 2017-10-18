@@ -4,25 +4,62 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.interval import IntervalTrigger
 import atexit
 from flask_script import Manager
+import json
+
 app = Flask(__name__)
 manager = Manager(app)
 
-allprices = {}
+all_prices = {}
+coins = {}
+# import pprint
+# pp = pprint.PrettyPrinter(indent = 4)
+# pp.pprint()
 
-def getPrices():
-	global allprices
-	requestaddress = 'https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC&tsyms=USD'
+def coinCompile():
+	global coins
+	iteration = 0
+	api_call = 1
+	coins_to_search = ""
+	for coin in coins:
+		iteration += 1
+		if(iteration > (60 * api_call)):
+			getPrices(coins_to_search)
+			api_call += 1
+			coins_to_search = ""
+		if(iteration == len(coins)):
+			coins_to_search += coin
+			getPrices(coins_to_search)
+			break;
+		coins_to_search += (coin + ',')
+	print("I got all the coins")
+def getPrices(coin_list):
+	global all_prices
+	requestaddress = 'https://min-api.cryptocompare.com/data/pricemulti?fsyms={}&tsyms=USD'.format(coin_list)
 	try: 
 		response = requests.get(requestaddress)
-		allprices['BTC'] = response.json()['BTC']['USD']
-		print('gettingprices')
+		response = response.json()
+		for coin in response:
+			all_prices[coin] = response[coin]['USD']
+		print("Getting the prices")
 	except:
 		print("I didn't recieve any information for this coin")
 
-scheduler = BackgroundScheduler()
-scheduler.start()
-scheduler.add_job(getPrices, 'interval', seconds=5)
-atexit.register(lambda: scheduler.shutdown())
+def getCoins():
+	requestaddress = 'https://www.cryptocompare.com/api/data/coinlist/'
+	try:
+		response = requests.get(requestaddress)
+		allcoins = response.json()['Data']
+		for coin in allcoins:
+			coin_abrv = allcoins[coin]['Name']
+			coin_name = allcoins[coin]['CoinName']
+			coins[coin_abrv] = coin_name
+	except:
+		print("I didn't retrieve anything")
+def scheduleProcess():
+	scheduler = BackgroundScheduler()
+	scheduler.start()
+	scheduler.add_job(coinCompile, 'interval', seconds=10)
+	atexit.register(lambda: scheduler.shutdown())
 @app.route("/")
 def mainpage():
     return render_template('index.html') 
@@ -33,16 +70,22 @@ def fun():
 
 @app.route("/prices", methods=['GET', 'POST'])
 def prices(coinname='BTC'):
-	global allprices
+	global all_prices
+	coinstosend = {}
+	while(bool(all_prices) == False):
+		return "I have no prices yet"
 	if(request.method == 'POST'):
-		requestInfo = request.form
-		coins = requestInfo['coins']
+		coinsneeded = json.loads(request.form['coins'])
+		for coin in coinsneeded:
+			coinstosend[coin] = all_prices[coin]
+		return jsonify(coins=coinstosend)
 	else:
-		return jsonify(BTC=allprices[coinname])
+		return jsonify(BTC=all_prices[coinname])
 
 @manager.command
 def runserver():
-	getPrices()
+	getCoins()
+	scheduleProcess()
 	app.run(debug=True, host='0.0.0.0', use_reloader=False)
 
 if __name__ == "__main__":
