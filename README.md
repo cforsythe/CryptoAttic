@@ -10,7 +10,9 @@ The cryptocurrency [portfolio](http://www.cryptoattic.com) that values anonymity
 4. If you add any new libraries you need to install them with `pipenv install <library name>` this will keep all other users libraries up to date when they fetch
 5. There is a Trello where everyone is putting what they will contribute to if you want to contribute you should join this.
 
+**Resources**
 
+[Coin Price API](https://www.cryptocompare.com/api/#introduction)
 
 
 Have any questions shoot me an email: cryptoattic@gmail.com
