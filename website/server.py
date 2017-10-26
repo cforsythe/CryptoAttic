@@ -54,11 +54,8 @@ def getCoins():
 	except:
 		print("I didn't retrieve anything")
 
-def scheduleProcess():
-	scheduler = BackgroundScheduler()
-	scheduler.start()
-	scheduler.add_job(coinCompile, 'interval', seconds=10)
-	atexit.register(lambda: scheduler.shutdown())
+# def scheduleProcess():
+# atexit.register(lambda: scheduler.shutdown())
 @app.route("/")
 def mainpage():
     return render_template('index.html')
@@ -80,12 +77,15 @@ def prices(coinname='BTC'):
 		return jsonify(coins=coinstosend)
 	else:
 		return jsonify(BTC=all_prices[coinname])
+@app.before_first_request
+def init():
+	getCoins()
+	scheduler = BackgroundScheduler()
+	scheduler.start()
+	scheduler.add_job(coinCompile, 'interval', seconds=10)
 
 @manager.command
 def runserver(*args):
-	print(args)
-	getCoins()
-	scheduleProcess()
 	app.run(debug=True, host='0.0.0.0', use_reloader=False)
 
 if __name__ == "__main__":
