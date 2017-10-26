@@ -32,7 +32,7 @@ def coinCompile():
 def getPrices(coin_list):
 	global all_prices
 	requestaddress = 'https://min-api.cryptocompare.com/data/pricemulti?fsyms={}&tsyms=USD'.format(coin_list)
-	try: 
+	try:
 		response = requests.get(requestaddress)
 		response = response.json()
 		for coin in response:
@@ -61,7 +61,7 @@ def scheduleProcess():
 	atexit.register(lambda: scheduler.shutdown())
 @app.route("/")
 def mainpage():
-    return render_template('index.html') 
+    return render_template('index.html')
 
 @app.route("/fun")
 def fun():
@@ -82,12 +82,11 @@ def prices(coinname='BTC'):
 		return jsonify(BTC=all_prices[coinname])
 
 @manager.command
-def runserver():
+def runserver(*args):
+	print(args)
 	getCoins()
 	scheduleProcess()
 	app.run(debug=True, host='0.0.0.0', use_reloader=False)
 
 if __name__ == "__main__":
 	manager.run()
-	
-
