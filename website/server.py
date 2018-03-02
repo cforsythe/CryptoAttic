@@ -84,9 +84,8 @@ def init():
 	scheduler.start()
 	scheduler.add_job(coinCompile, 'interval', seconds=10)
 
-@manager.command
-def runserver(*args):
-	app.run(debug=True, host='0.0.0.0', use_reloader=False)
+
+
 
 if __name__ == "__main__":
-	manager.run()
+	app.run(debug=True, host='0.0.0.0', use_reloader=False, threaded=True)
