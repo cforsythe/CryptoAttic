@@ -54,8 +54,6 @@ def getCoins():
 	except:
 		print("I didn't retrieve anything")
 
-# def scheduleProcess():
-# atexit.register(lambda: scheduler.shutdown())
 @app.route("/")
 def mainpage():
     return render_template('index.html')
