@@ -1,1 +1,6 @@
 index.sublime-workspace
+venv/
+*.swp
+*.pyc
+*.swo
+redis*/
